@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -6,6 +7,23 @@ class ManageCompany extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController companyName = TextEditingController();
+
+    //Add company name function
+    addCompanyName() async {
+      String cName = companyName.text.trim();
+
+      if (companyName.text.isEmpty) {
+      } else {
+        CollectionReference collectionReference =
+            FirebaseFirestore.instance.collection("Company-Name");
+
+        Map<String, dynamic> name = {'company-name': cName};
+        companyName.clear();
+        return collectionReference.add(name);
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -25,6 +43,7 @@ class ManageCompany extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TextField(
+                controller: companyName,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
@@ -40,7 +59,9 @@ class ManageCompany extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xff6D7072),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    addCompanyName();
+                  },
                   child: Text(
                     'Add',
                     style: TextStyle(fontSize: 18.sp),
@@ -56,41 +77,58 @@ class ManageCompany extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 12.sp),
-              ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: 10,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: EdgeInsets.only(bottom: 10.h),
-                    child: Card(
-                      color: const Color(0xff6D7072),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.r),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                            vertical: 10.h, horizontal: 17.w),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "ABB Ltd.",
-                              style: TextStyle(
-                                fontSize: 18.sp,
-                                color: const Color(0xffFFFFFF),
-                              ),
-                              textAlign: TextAlign.center,
+              StreamBuilder(
+                stream: FirebaseFirestore.instance
+                    .collection("Company-Name")
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  return ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (context, index) {
+                      Map<String, dynamic> name =
+                          snapshot.data!.docs[index].data();
+                      return Padding(
+                        padding: EdgeInsets.only(bottom: 10.h),
+                        child: Card(
+                          color: const Color(0xff6D7072),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.r),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 10.h, horizontal: 17.w),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  name['company-name'],
+                                  style: TextStyle(
+                                    fontSize: 18.sp,
+                                    color: const Color(0xffFFFFFF),
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                InkWell(
+                                  onTap: () {},
+                                  child: Icon(
+                                    Icons.delete,
+                                    size: 18.sp,
+                                    color: const Color(0xffFFFFFF),
+                                  ),
+                                )
+                              ],
                             ),
-                            Icon(
-                              Icons.delete,
-                              size: 18.sp,
-                              color: const Color(0xffFFFFFF),
-                            )
-                          ],
+                          ),
                         ),
-                      ),
-                    ),
+                      );
+                    },
                   );
                 },
               )

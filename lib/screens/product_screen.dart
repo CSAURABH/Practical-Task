@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:practical_task/screens/add_products.dart';
 
 class ProductScreen extends StatelessWidget {
   const ProductScreen({super.key});
@@ -18,7 +19,17 @@ class ProductScreen extends StatelessWidget {
             ),
           ),
           actions: [
-            Icon(Icons.add, size: 21.68.sp),
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const AddProducts(),
+                  ),
+                );
+              },
+              child: Icon(Icons.add, size: 21.68.sp),
+            ),
             SizedBox(width: 16.23.sp),
           ],
         ),

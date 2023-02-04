@@ -99,6 +99,8 @@ class _ManageCategoryState extends State<ManageCategory> {
                     itemBuilder: (context, index) {
                       Map<String, dynamic> name =
                           snapshot.data!.docs[index].data();
+                      DocumentSnapshot documentSnapshot =
+                          snapshot.data!.docs[index];
                       return Padding(
                         padding: EdgeInsets.only(bottom: 10.h),
                         child: Card(
@@ -120,10 +122,18 @@ class _ManageCategoryState extends State<ManageCategory> {
                                   ),
                                   textAlign: TextAlign.center,
                                 ),
-                                Icon(
-                                  Icons.delete,
-                                  size: 18.sp,
-                                  color: const Color(0xffFFFFFF),
+                                InkWell(
+                                  onTap: () {
+                                    FirebaseFirestore.instance
+                                        .collection('Category-Name')
+                                        .doc(documentSnapshot.id)
+                                        .delete();
+                                  },
+                                  child: Icon(
+                                    Icons.delete,
+                                    size: 18.sp,
+                                    color: const Color(0xffFFFFFF),
+                                  ),
                                 )
                               ],
                             ),

@@ -94,6 +94,9 @@ class ManageCompany extends StatelessWidget {
                     itemBuilder: (context, index) {
                       Map<String, dynamic> name =
                           snapshot.data!.docs[index].data();
+
+                      DocumentSnapshot documentSnapshot =
+                          snapshot.data!.docs[index];
                       return Padding(
                         padding: EdgeInsets.only(bottom: 10.h),
                         child: Card(
@@ -116,7 +119,12 @@ class ManageCompany extends StatelessWidget {
                                   textAlign: TextAlign.center,
                                 ),
                                 InkWell(
-                                  onTap: () {},
+                                  onTap: () {
+                                    FirebaseFirestore.instance
+                                        .collection('Company-Name')
+                                        .doc(documentSnapshot.id)
+                                        .delete();
+                                  },
                                   child: Icon(
                                     Icons.delete,
                                     size: 18.sp,

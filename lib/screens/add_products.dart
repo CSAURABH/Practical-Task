@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class AddProducts extends StatelessWidget {
+class AddProducts extends StatefulWidget {
   const AddProducts({super.key});
 
+  @override
+  State<AddProducts> createState() => _AddProductsState();
+}
+
+class _AddProductsState extends State<AddProducts> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,6 +28,7 @@ class AddProducts extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
           child: Form(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TextFormField(
                   decoration: InputDecoration(
@@ -33,23 +39,55 @@ class AddProducts extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 16.h),
-                const ExpansionTile(
-                  title: Text('Category'),
-                  children: [
-                    ListTile(title: Text('This is tile number 1')),
-                  ],
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(width: 0.5.sp),
+                    borderRadius: BorderRadius.circular(5.sp),
+                  ),
+                  child: ExpansionTile(
+                    title: const Text("Category"),
+                    onExpansionChanged: (value) {
+                      setState(() {});
+                    },
+                    children: const [
+                      ListTile(
+                        title: Text("Expanded Content"),
+                      ),
+                    ],
+                  ),
                 ),
                 SizedBox(height: 16.h),
-                const ExpansionTile(
-                  title: Text('Company Name'),
-                  children: [
-                    ListTile(title: Text('This is tile number 1')),
-                    ListTile(title: Text('This is tile number 1')),
-                    ListTile(title: Text('This is tile number 1')),
-                    ListTile(title: Text('This is tile number 1')),
-                    ListTile(title: Text('This is tile number 1')),
-                    ListTile(title: Text('This is tile number 1')),
-                  ],
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5.sp),
+                    border: Border.all(width: 0.5.sp),
+                  ),
+                  child: ExpansionTile(
+                    title: const Text("Company Name"),
+                    onExpansionChanged: (value) {
+                      setState(() {});
+                    },
+                    children: const [
+                      ListTile(
+                        title: Text("Expanded Content"),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 16.h),
+                TextFormField(
+                  minLines: 3,
+                  maxLines: 5,
+                  keyboardType: TextInputType.multiline,
+                  decoration: const InputDecoration(
+                    hintText: 'Description',
+                    hintStyle: TextStyle(color: Color(0xff6D7072)),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(5.0),
+                      ),
+                    ),
+                  ),
                 ),
                 SizedBox(height: 16.h),
                 TextFormField(
@@ -67,6 +105,56 @@ class AddProducts extends StatelessWidget {
                       borderRadius: BorderRadius.circular(5.0),
                     ),
                     labelText: 'Qty',
+                  ),
+                ),
+                SizedBox(height: 16.h),
+                Text(
+                  'Upload Image:',
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    color: const Color(0xff6D7072),
+                  ),
+                ),
+                Row(
+                  children: [
+                    SizedBox(
+                      height: 42.h,
+                      width: 80.48.w,
+                      child: const Card(
+                        child: Icon(Icons.add),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 42.h,
+                      width: 80.48.w,
+                      child: const Card(
+                        child: Icon(Icons.add),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 42.h,
+                      width: 80.48.w,
+                      child: const Card(
+                        child: Icon(Icons.add),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 42.h,
+                      width: 80.48.w,
+                      child: const Card(
+                        child: Icon(Icons.add),
+                      ),
+                    ),
+                  ],
+                ),
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: Text(
+                    'Minimum 2 Image',
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      color: const Color(0xff6D7072),
+                    ),
                   ),
                 ),
                 SizedBox(height: 16.h),

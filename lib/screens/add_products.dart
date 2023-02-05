@@ -7,6 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:practical_task/screens/product_screen.dart';
 import 'package:uuid/uuid.dart';
 
 class AddProducts extends StatefulWidget {
@@ -354,6 +355,13 @@ class _AddProductsState extends State<AddProducts> {
                     ),
                     onPressed: () {
                       addProduct();
+                      Navigator.popUntil(context, (route) => route.isFirst);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ProductScreen(),
+                        ),
+                      );
                     },
                     child: Text(
                       'Save',

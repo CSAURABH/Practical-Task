@@ -11,34 +11,39 @@ class AddProducts extends StatefulWidget {
 
 class _AddProductsState extends State<AddProducts> {
   TextEditingController productName = TextEditingController();
-  TextEditingController categoryName = TextEditingController();
-  TextEditingController companyName = TextEditingController();
+
   TextEditingController description = TextEditingController();
   TextEditingController price = TextEditingController();
   TextEditingController quantity = TextEditingController();
-
+  String? categoryTitle;
+  String? companyTitle;
   addProduct() async {
     String pName = productName.text.trim();
-    // String catName = categoryName.text.trim();
-    // String cpyName = companyName.text.trim();
     String descName = description.text.trim();
     String priceName = price.text.trim();
     String qtyName = quantity.text.trim();
 
     if (productName.text.trim().isEmpty ||
+        categoryTitle!.isEmpty ||
+        companyTitle!.isEmpty ||
         description.text.trim().isEmpty ||
         price.text.trim().isEmpty ||
         quantity.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Please fill the required field'),
+      ));
     } else {
       CollectionReference collectionReference =
           FirebaseFirestore.instance.collection('Product');
       Map<String, dynamic> product = {
         'product-name': pName,
+        'category': categoryTitle,
+        'company': companyTitle,
         'description-name': descName,
         'price-name': priceName,
         'qty-name': qtyName,
       };
-      companyName.clear();
+      Navigator.pop(context);
       return collectionReference.add(product);
     }
   }
@@ -80,13 +85,39 @@ class _AddProductsState extends State<AddProducts> {
                     borderRadius: BorderRadius.circular(5.sp),
                   ),
                   child: ExpansionTile(
-                    title: const Text("Category"),
-                    onExpansionChanged: (value) {
-                      setState(() {});
-                    },
-                    children: const [
-                      ListTile(
-                        title: Text("Expanded Content"),
+                    title: Text(
+                        categoryTitle == null ? 'Category' : categoryTitle!),
+                    children: [
+                      StreamBuilder(
+                        stream: FirebaseFirestore.instance
+                            .collection("Category-Name")
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return const Center(
+                              child: SizedBox.shrink(),
+                            );
+                          }
+                          return SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            height: 340,
+                            child: ListView.builder(
+                              itemCount: snapshot.data!.docs.length,
+                              itemBuilder: (context, index) {
+                                Map<String, dynamic> name =
+                                    snapshot.data!.docs[index].data();
+                                return ListTile(
+                                  onTap: () {
+                                    setState(() {
+                                      categoryTitle = name['category-name'];
+                                    });
+                                  },
+                                  title: Text(name['category-name']),
+                                );
+                              },
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),
@@ -94,17 +125,43 @@ class _AddProductsState extends State<AddProducts> {
                 SizedBox(height: 16.h),
                 Container(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5.sp),
                     border: Border.all(width: 0.5.sp),
+                    borderRadius: BorderRadius.circular(5.sp),
                   ),
                   child: ExpansionTile(
-                    title: const Text("Company Name"),
-                    onExpansionChanged: (value) {
-                      setState(() {});
-                    },
-                    children: const [
-                      ListTile(
-                        title: Text("Expanded Content"),
+                    title:
+                        Text(companyTitle == null ? 'Company' : companyTitle!),
+                    children: [
+                      StreamBuilder(
+                        stream: FirebaseFirestore.instance
+                            .collection("Company-Name")
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return const Center(
+                              child: SizedBox.shrink(),
+                            );
+                          }
+                          return SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            height: 340,
+                            child: ListView.builder(
+                              itemCount: snapshot.data!.docs.length,
+                              itemBuilder: (context, index) {
+                                Map<String, dynamic> name =
+                                    snapshot.data!.docs[index].data();
+                                return ListTile(
+                                  onTap: () {
+                                    setState(() {
+                                      companyTitle = name['company-name'];
+                                    });
+                                  },
+                                  title: Text(name['company-name']),
+                                );
+                              },
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),
@@ -153,6 +210,7 @@ class _AddProductsState extends State<AddProducts> {
                     color: const Color(0xff6D7072),
                   ),
                 ),
+                SizedBox(height: 16.h),
                 Row(
                   children: [
                     SizedBox(

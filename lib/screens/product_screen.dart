@@ -94,7 +94,7 @@ class ProductScreen extends StatelessWidget {
                                         color: const Color(0xff6D7072)),
                                   ),
                                   Text(
-                                    'Computer & Accessories',
+                                    name['category'],
                                     style: TextStyle(
                                         fontSize: 9.sp,
                                         color: const Color(0xff6D7072)),

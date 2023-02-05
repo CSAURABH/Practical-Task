@@ -11,9 +11,9 @@ class DetailScreen extends StatefulWidget {
 class _DetailScreenState extends State<DetailScreen> {
   late PageController _pageController;
   List<String> images = [
-    "https://images.wallpapersden.com/image/download/purple-sunrise-4k-vaporwave_bGplZmiUmZqaraWkpJRmbmdlrWZlbWU.jpg",
-    "https://wallpaperaccess.com/full/2637581.jpg",
-    "https://uhdwallpapers.org/uploads/converted/20/01/14/the-mandalorian-5k-1920x1080_477555-mm-90.jpg"
+    // "https://images.wallpapersden.com/image/download/purple-sunrise-4k-vaporwave_bGplZmiUmZqaraWkpJRmbmdlrWZlbWU.jpg",
+    // "https://wallpaperaccess.com/full/2637581.jpg",
+    // "https://uhdwallpapers.org/uploads/converted/20/01/14/the-mandalorian-5k-1920x1080_477555-mm-90.jpg"
   ];
 
   @override
@@ -160,7 +160,7 @@ class _DetailScreenState extends State<DetailScreen> {
                       ),
                       onPressed: () {},
                       child: Text(
-                        'Save',
+                        'Edit',
                         style: TextStyle(fontSize: 18.sp),
                       ),
                     ),
@@ -174,7 +174,7 @@ class _DetailScreenState extends State<DetailScreen> {
                       ),
                       onPressed: () {},
                       child: Text(
-                        'Save',
+                        'Delete',
                         style: TextStyle(fontSize: 18.sp),
                       ),
                     ),

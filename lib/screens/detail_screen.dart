@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class DetailScreen extends StatefulWidget {
-  const DetailScreen({super.key});
+  Map<String, dynamic> details;
+  DetailScreen({
+    Key? key,
+    required this.details,
+  }) : super(key: key);
 
   @override
   State<DetailScreen> createState() => _DetailScreenState();
@@ -24,6 +28,7 @@ class _DetailScreenState extends State<DetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.details);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -62,7 +67,7 @@ class _DetailScreenState extends State<DetailScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'LG LCD Monitor',
+                        widget.details['product-name'],
                         style: TextStyle(
                           color: const Color(0xff6D7072),
                           fontSize: 14.sp,
@@ -70,7 +75,7 @@ class _DetailScreenState extends State<DetailScreen> {
                         ),
                       ),
                       Text(
-                        'Computer & Accessories',
+                        widget.details['category'],
                         style: TextStyle(
                           color: const Color(0xff6D7072),
                           fontSize: 9.sp,
@@ -79,7 +84,7 @@ class _DetailScreenState extends State<DetailScreen> {
                       ),
                       SizedBox(height: 8.h),
                       Text(
-                        'Opel Pvt. Ltd',
+                        widget.details['company'],
                         style: TextStyle(
                           color: const Color(0xff6D7072),
                           fontSize: 14.sp,
@@ -92,16 +97,16 @@ class _DetailScreenState extends State<DetailScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       RichText(
-                        text: const TextSpan(
+                        text: TextSpan(
                           text: 'Price: ',
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Color(0xff6D7072),
                             fontWeight: FontWeight.normal,
                           ),
                           children: [
                             TextSpan(
-                              text: '4500/-',
-                              style: TextStyle(
+                              text: widget.details['price-name'],
+                              style: const TextStyle(
                                 color: Color(0xff6D7072),
                               ),
                             ),
@@ -110,16 +115,16 @@ class _DetailScreenState extends State<DetailScreen> {
                       ),
                       SizedBox(height: 17.h),
                       RichText(
-                        text: const TextSpan(
+                        text: TextSpan(
                           text: 'Qty: ',
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Color(0xff6D7072),
                             fontWeight: FontWeight.normal,
                           ),
                           children: [
                             TextSpan(
-                              text: '05',
-                              style: TextStyle(
+                              text: widget.details['qty-name'],
+                              style: const TextStyle(
                                 color: Color(0xff6D7072),
                               ),
                             ),
@@ -141,7 +146,7 @@ class _DetailScreenState extends State<DetailScreen> {
               ),
               SizedBox(height: 6.h),
               Text(
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s",
+                widget.details['description-name'],
                 style: TextStyle(
                   fontSize: 13.sp,
                   color: const Color(0xff6D7072),

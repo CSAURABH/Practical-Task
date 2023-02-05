@@ -132,12 +132,13 @@ class ProductScreen extends StatelessWidget {
                                   ),
                                   onPressed: () {
                                     Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => EditScreen(
-                                            id: documentSnapshot.id,
-                                          ),
-                                        ));
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => EditScreen(
+                                          id: documentSnapshot.id,
+                                        ),
+                                      ),
+                                    );
                                   },
                                   child: const Text('Edit'),
                                 ),

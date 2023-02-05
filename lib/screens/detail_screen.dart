@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:practical_task/screens/edit_screen.dart';
 
 // ignore: must_be_immutable
 class DetailScreen extends StatefulWidget {
@@ -204,7 +205,16 @@ class _DetailScreenState extends State<DetailScreen> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xff6D7072),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EditScreen(
+                              id: widget.id,
+                            ),
+                          ),
+                        );
+                      },
                       child: Text(
                         'Edit',
                         style: TextStyle(fontSize: 18.sp),

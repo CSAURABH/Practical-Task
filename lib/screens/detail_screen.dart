@@ -1,11 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+// ignore: must_be_immutable
 class DetailScreen extends StatefulWidget {
-  Map<String, dynamic> details;
+  Map<String, dynamic>? details;
+  String? id;
   DetailScreen({
     Key? key,
     required this.details,
+    required this.id,
   }) : super(key: key);
 
   @override
@@ -14,11 +19,7 @@ class DetailScreen extends StatefulWidget {
 
 class _DetailScreenState extends State<DetailScreen> {
   late PageController _pageController;
-  List<String> images = [
-    // "https://images.wallpapersden.com/image/download/purple-sunrise-4k-vaporwave_bGplZmiUmZqaraWkpJRmbmdlrWZlbWU.jpg",
-    // "https://wallpaperaccess.com/full/2637581.jpg",
-    // "https://uhdwallpapers.org/uploads/converted/20/01/14/the-mandalorian-5k-1920x1080_477555-mm-90.jpg"
-  ];
+  int _currentPosition = 0;
 
   @override
   void initState() {
@@ -28,7 +29,10 @@ class _DetailScreenState extends State<DetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.details);
+    List<dynamic> images = [
+      '${widget.details!["image"]}',
+      '${widget.details!["image2"]}',
+    ];
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -47,17 +51,55 @@ class _DetailScreenState extends State<DetailScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
-                height: 150.h,
-                width: 342.w,
-                child: PageView.builder(
-                  itemCount: images.length,
-                  pageSnapping: true,
-                  controller: _pageController,
-                  itemBuilder: (context, pagePosition) {
-                    return Image.network(images[pagePosition]);
-                  },
-                ),
+              Stack(
+                children: [
+                  SizedBox(
+                    height: 150.h,
+                    width: 342.w,
+                    child: PageView.builder(
+                      itemCount: images.length,
+                      pageSnapping: true,
+                      controller: _pageController,
+                      onPageChanged: (value) {
+                        setState(() {
+                          _currentPosition = value;
+                        });
+                      },
+                      itemBuilder: (context, pagePosition) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Image.network(
+                            images[pagePosition],
+                            fit: BoxFit.fill,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    height: 30,
+                    child: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List.generate(
+                          images.length,
+                          (index) => Padding(
+                            padding: const EdgeInsets.all(5),
+                            child: CircleAvatar(
+                              radius: 5.sp,
+                              backgroundColor: _currentPosition == index
+                                  ? Colors.red
+                                  : Colors.blue,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
               ),
               SizedBox(height: 17.h),
               Row(
@@ -67,7 +109,7 @@ class _DetailScreenState extends State<DetailScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        widget.details['product-name'],
+                        widget.details!['product-name'],
                         style: TextStyle(
                           color: const Color(0xff6D7072),
                           fontSize: 14.sp,
@@ -75,7 +117,7 @@ class _DetailScreenState extends State<DetailScreen> {
                         ),
                       ),
                       Text(
-                        widget.details['category'],
+                        widget.details!['category'],
                         style: TextStyle(
                           color: const Color(0xff6D7072),
                           fontSize: 9.sp,
@@ -84,7 +126,7 @@ class _DetailScreenState extends State<DetailScreen> {
                       ),
                       SizedBox(height: 8.h),
                       Text(
-                        widget.details['company'],
+                        widget.details!['company'],
                         style: TextStyle(
                           color: const Color(0xff6D7072),
                           fontSize: 14.sp,
@@ -105,7 +147,7 @@ class _DetailScreenState extends State<DetailScreen> {
                           ),
                           children: [
                             TextSpan(
-                              text: widget.details['price-name'],
+                              text: widget.details!['price-name'],
                               style: const TextStyle(
                                 color: Color(0xff6D7072),
                               ),
@@ -123,7 +165,7 @@ class _DetailScreenState extends State<DetailScreen> {
                           ),
                           children: [
                             TextSpan(
-                              text: widget.details['qty-name'],
+                              text: widget.details!['qty-name'],
                               style: const TextStyle(
                                 color: Color(0xff6D7072),
                               ),
@@ -146,13 +188,13 @@ class _DetailScreenState extends State<DetailScreen> {
               ),
               SizedBox(height: 6.h),
               Text(
-                widget.details['description-name'],
+                widget.details!['description-name'],
                 style: TextStyle(
                   fontSize: 13.sp,
                   color: const Color(0xff6D7072),
                 ),
               ),
-              SizedBox(height: 27.h),
+              SizedBox(height: 100.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -177,7 +219,14 @@ class _DetailScreenState extends State<DetailScreen> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xff6D7072),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        FirebaseFirestore.instance
+                            .collection('Product')
+                            .doc(widget.id)
+                            .delete();
+
+                        Navigator.pop(context);
+                      },
                       child: Text(
                         'Delete',
                         style: TextStyle(fontSize: 18.sp),

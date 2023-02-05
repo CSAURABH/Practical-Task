@@ -18,6 +18,7 @@ class AddProducts extends StatefulWidget {
 
 class _AddProductsState extends State<AddProducts> {
   File? productImage;
+  File? productImage1;
 
   TextEditingController productName = TextEditingController();
   TextEditingController description = TextEditingController();
@@ -53,6 +54,15 @@ class _AddProductsState extends State<AddProducts> {
       TaskSnapshot taskSnapshot = await uploadTask;
       String downloadUrl = await taskSnapshot.ref.getDownloadURL();
 
+      UploadTask uploadTask1 = FirebaseStorage.instance
+          .ref()
+          .child('images')
+          .child(const Uuid().v1())
+          .putFile(productImage1!);
+
+      TaskSnapshot taskSnapshot1 = await uploadTask1;
+      String downloadUrl1 = await taskSnapshot1.ref.getDownloadURL();
+
       // add data to firestore
       CollectionReference collectionReference =
           FirebaseFirestore.instance.collection('Product');
@@ -63,16 +73,40 @@ class _AddProductsState extends State<AddProducts> {
         'description-name': descName,
         'price-name': priceName,
         'qty-name': qtyName,
-        'image': downloadUrl
+        'image': downloadUrl,
+        'image2': downloadUrl1
       };
       // ignore: use_build_context_synchronously
-      Navigator.pop(context);
-      return collectionReference.add(product);
+
+      collectionReference.add(product);
     }
   }
 
+  dialog(collection) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(
+                width: double.infinity,
+              ),
+              const CircularProgressIndicator(),
+              SizedBox(height: 10.h),
+              const Text('Loading....'),
+            ],
+          ),
+        );
+      },
+    ).then(
+      (value) => Navigator.pop(context),
+    );
+  }
+
   //Upload image
-  uploadImage() async {
+  uploadImage1() async {
     ImagePicker imagePicker = ImagePicker();
     XFile? file = await imagePicker.pickImage(source: ImageSource.gallery);
 
@@ -82,6 +116,25 @@ class _AddProductsState extends State<AddProducts> {
         productImage = convertedFile;
       });
     }
+    return null;
+  }
+
+  uploadImage2() async {
+    ImagePicker imagePicker = ImagePicker();
+    XFile? file = await imagePicker.pickImage(source: ImageSource.gallery);
+
+    if (file != null) {
+      File convertedFile = File(file.path);
+      setState(() {
+        productImage1 = convertedFile;
+      });
+    }
+    return null;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -220,6 +273,7 @@ class _AddProductsState extends State<AddProducts> {
                 ),
                 SizedBox(height: 16.h),
                 TextFormField(
+                  keyboardType: TextInputType.number,
                   controller: price,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
@@ -230,6 +284,7 @@ class _AddProductsState extends State<AddProducts> {
                 ),
                 SizedBox(height: 16.h),
                 TextFormField(
+                  keyboardType: TextInputType.number,
                   controller: quantity,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
@@ -251,21 +306,36 @@ class _AddProductsState extends State<AddProducts> {
                   children: [
                     InkWell(
                       onTap: () {
-                        uploadImage();
+                        uploadImage1();
                       },
                       child: SizedBox(
                         height: 42.h,
                         width: 80.48.w,
-                        child: const Card(
-                          child: Icon(Icons.add),
+                        child: Card(
+                          child: productImage != null
+                              ? Image.file(
+                                  productImage!,
+                                  fit: BoxFit.fill,
+                                )
+                              : const Icon(Icons.add),
                         ),
                       ),
                     ),
-                    SizedBox(
-                      height: 42.h,
-                      width: 80.48.w,
-                      child: const Card(
-                        child: Icon(Icons.add),
+                    InkWell(
+                      onTap: () {
+                        uploadImage2();
+                      },
+                      child: SizedBox(
+                        height: 42.h,
+                        width: 80.48.w,
+                        child: Card(
+                          child: productImage1 != null
+                              ? Image.file(
+                                  productImage1!,
+                                  fit: BoxFit.fill,
+                                )
+                              : const Icon(Icons.add),
+                        ),
                       ),
                     ),
                     SizedBox(

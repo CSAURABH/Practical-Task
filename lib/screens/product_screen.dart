@@ -55,6 +55,7 @@ class ProductScreen extends StatelessWidget {
                       MaterialPageRoute(
                         builder: (context) => DetailScreen(
                           details: name,
+                          id: documentSnapshot.id,
                         ),
                       ),
                     );
@@ -76,10 +77,12 @@ class ProductScreen extends StatelessWidget {
                                 width: 77.w,
                                 child: Card(
                                   color: const Color(0xff6D7072),
-                                  child: Image.network(
-                                    name['image'],
-                                    fit: BoxFit.fill,
-                                  ),
+                                  child: name['image'] == null
+                                      ? const Center(child: Text('Image'))
+                                      : Image.network(
+                                          name['image'],
+                                          fit: BoxFit.fill,
+                                        ),
                                 ),
                               ),
                               SizedBox(
@@ -90,11 +93,15 @@ class ProductScreen extends StatelessWidget {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   SizedBox(height: 10.h),
-                                  Text(
-                                    name['product-name'],
-                                    style: TextStyle(
-                                        fontSize: 14.sp,
-                                        color: const Color(0xff6D7072)),
+                                  SizedBox(
+                                    width: 120.w,
+                                    child: Text(
+                                      name['product-name'],
+                                      style: TextStyle(
+                                          overflow: TextOverflow.ellipsis,
+                                          fontSize: 14.sp,
+                                          color: const Color(0xff6D7072)),
+                                    ),
                                   ),
                                   Text(
                                     name['category'],

@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
       splitScreenMode: true,
       builder: (BuildContext context, Widget? child) {
         return MaterialApp(
+          debugShowCheckedModeBanner: false,
           title: 'Flutter Demo',
           theme: ThemeData(
             primarySwatch: Colors.blue,

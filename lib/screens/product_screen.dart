@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:practical_task/screens/add_products.dart';
 import 'package:practical_task/screens/detail_screen.dart';
+import 'package:practical_task/screens/edit_screen.dart';
 
 class ProductScreen extends StatelessWidget {
   const ProductScreen({super.key});
@@ -129,7 +130,15 @@ class ProductScreen extends StatelessWidget {
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: const Color(0xff6D7072),
                                   ),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => EditScreen(
+                                            id: documentSnapshot.id,
+                                          ),
+                                        ));
+                                  },
                                   child: const Text('Edit'),
                                 ),
                               ),

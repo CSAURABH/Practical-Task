@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -70,7 +69,7 @@ class _DetailScreenState extends State<DetailScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: Image.network(
                             images[pagePosition],
-                            fit: BoxFit.fill,
+                            fit: BoxFit.contain,
                           ),
                         );
                       },

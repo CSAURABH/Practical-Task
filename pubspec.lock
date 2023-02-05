@@ -85,13 +85,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.5"
-  dots_indicator:
-    dependency: "direct main"
-    description:
-      name: dots_indicator
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.1.0"
   fake_async:
     dependency: transitive
     description:
@@ -146,13 +139,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_custom_carousel_slider:
-    dependency: "direct main"
-    description:
-      name: flutter_custom_carousel_slider
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.2.0"
   flutter_lints:
     dependency: "direct dev"
     description:

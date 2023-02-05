@@ -9,14 +9,20 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 
-class AddProducts extends StatefulWidget {
-  const AddProducts({super.key});
+// ignore: must_be_immutable
+class EditScreen extends StatefulWidget {
+  String? id;
+
+  EditScreen({
+    Key? key,
+    this.id,
+  }) : super(key: key);
 
   @override
-  State<AddProducts> createState() => _AddProductsState();
+  State<EditScreen> createState() => _AddProductsState();
 }
 
-class _AddProductsState extends State<AddProducts> {
+class _AddProductsState extends State<EditScreen> {
   File? productImage;
   File? productImage1;
 
@@ -77,9 +83,10 @@ class _AddProductsState extends State<AddProducts> {
         'image2': downloadUrl1
       };
 
-      collectionReference.add(product);
+      collectionReference.doc(widget.id).update(product);
     }
     // ignore: use_build_context_synchronously
+    Navigator.pop(context);
   }
 
   //Upload image
@@ -123,7 +130,7 @@ class _AddProductsState extends State<AddProducts> {
         centerTitle: true,
         backgroundColor: const Color(0xff6D7072),
         title: Text(
-          'Add Products',
+          'Edit Products',
           style: TextStyle(
             fontSize: 24.sp,
             color: const Color(0xffFFFFFF),
@@ -356,7 +363,7 @@ class _AddProductsState extends State<AddProducts> {
                       addProduct();
                     },
                     child: Text(
-                      'Save',
+                      'Edit',
                       style: TextStyle(fontSize: 18.sp),
                     ),
                   ),

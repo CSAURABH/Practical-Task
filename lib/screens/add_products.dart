@@ -1,6 +1,13 @@
+// ignore_for_file: unnecessary_null_comparison
+
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:uuid/uuid.dart';
 
 class AddProducts extends StatefulWidget {
   const AddProducts({super.key});
@@ -10,13 +17,16 @@ class AddProducts extends StatefulWidget {
 }
 
 class _AddProductsState extends State<AddProducts> {
-  TextEditingController productName = TextEditingController();
+  File? productImage;
 
+  TextEditingController productName = TextEditingController();
   TextEditingController description = TextEditingController();
   TextEditingController price = TextEditingController();
   TextEditingController quantity = TextEditingController();
   String? categoryTitle;
   String? companyTitle;
+
+  //Add product
   addProduct() async {
     String pName = productName.text.trim();
     String descName = description.text.trim();
@@ -33,6 +43,17 @@ class _AddProductsState extends State<AddProducts> {
         content: Text('Please fill the required field'),
       ));
     } else {
+      // Uplaod image to firebase storage
+      UploadTask uploadTask = FirebaseStorage.instance
+          .ref()
+          .child('images')
+          .child(const Uuid().v1())
+          .putFile(productImage!);
+
+      TaskSnapshot taskSnapshot = await uploadTask;
+      String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+
+      // add data to firestore
       CollectionReference collectionReference =
           FirebaseFirestore.instance.collection('Product');
       Map<String, dynamic> product = {
@@ -42,9 +63,24 @@ class _AddProductsState extends State<AddProducts> {
         'description-name': descName,
         'price-name': priceName,
         'qty-name': qtyName,
+        'image': downloadUrl
       };
+      // ignore: use_build_context_synchronously
       Navigator.pop(context);
       return collectionReference.add(product);
+    }
+  }
+
+  //Upload image
+  uploadImage() async {
+    ImagePicker imagePicker = ImagePicker();
+    XFile? file = await imagePicker.pickImage(source: ImageSource.gallery);
+
+    if (file != null) {
+      File convertedFile = File(file.path);
+      setState(() {
+        productImage = convertedFile;
+      });
     }
   }
 
@@ -213,11 +249,16 @@ class _AddProductsState extends State<AddProducts> {
                 SizedBox(height: 16.h),
                 Row(
                   children: [
-                    SizedBox(
-                      height: 42.h,
-                      width: 80.48.w,
-                      child: const Card(
-                        child: Icon(Icons.add),
+                    InkWell(
+                      onTap: () {
+                        uploadImage();
+                      },
+                      child: SizedBox(
+                        height: 42.h,
+                        width: 80.48.w,
+                        child: const Card(
+                          child: Icon(Icons.add),
+                        ),
                       ),
                     ),
                     SizedBox(

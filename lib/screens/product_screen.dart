@@ -72,10 +72,11 @@ class ProductScreen extends StatelessWidget {
                               SizedBox(
                                 height: 77.h,
                                 width: 77.w,
-                                child: const Card(
-                                  color: Color(0xff6D7072),
-                                  child: Center(
-                                    child: Text('Image'),
+                                child: Card(
+                                  color: const Color(0xff6D7072),
+                                  child: Image.network(
+                                    name['image'],
+                                    fit: BoxFit.fill,
                                   ),
                                 ),
                               ),
